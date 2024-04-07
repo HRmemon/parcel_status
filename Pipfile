@@ -1,0 +1,16 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+aws-cdk-lib = "==2.136.0"
+constructs = "<11.0.0,>=10.0.0"
+requests = "*"
+beautifulsoup4 = "*"
+
+[dev-packages]
+ipykernel = "*"
+
+[requires]
+python_version = "3.9"

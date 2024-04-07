@@ -1,15 +1,25 @@
 import aws_cdk as core
 import aws_cdk.assertions as assertions
+import pytest
 
 from parcel_status.parcel_status_stack import ParcelStatusStack
 
-# example tests. To run these tests, uncomment this file along with the example
-# resource in parcel_status/parcel_status_stack.py
-def test_sqs_queue_created():
+def test_lambda_created():
     app = core.App()
     stack = ParcelStatusStack(app, "parcel-status")
     template = assertions.Template.from_stack(stack)
 
-#     template.has_resource_properties("AWS::SQS::Queue", {
-#         "VisibilityTimeout": 300
-#     })
+    template.has_resource_properties("AWS::Lambda::Function", {
+        "Runtime": "python3.12"
+    })
+
+def test_lambda_running():
+    app = core.App()
+    stack = ParcelStatusStack(app, "parcel-status")
+    template = assertions.Template.from_stack(stack)
+
+    template.resource_count_is("AWS::Lambda::Function", 1)
+    template.has_resource_properties("AWS::Lambda::Function", {
+        "Runtime": "python3.12"
+    })
+

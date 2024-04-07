@@ -1,0 +1,33 @@
+Folder PATH listing for volume SEM
+Volume serial number is 8ACA-55EA
+D:.
+�   .env
+�   .gitignore
+�   app.py
+�   cdk.json
+�   files.txt
+�   Pipfile
+�   README.md
+�   requirements-dev.txt
+�   requirements.txt
+�   source.bat
+�   
++---lambda
+�       get_parcel.py
+�       requirements.txt
+�       
++---parcel_status
+�   �   parcel_status_stack.py
+�   �   __init__.py
+�   �   
+�   +---__pycache__
+�           parcel_status_stack.cpython-310.pyc
+�           __init__.cpython-310.pyc
+�           
++---tests
+    �   __init__.py
+    �   
+    +---unit
+            test_parcel_status_stack.py
+            __init__.py
+            
