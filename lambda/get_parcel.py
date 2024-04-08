@@ -1,6 +1,8 @@
 import os
 import logging
+from urllib import response
 import requests
+import boto3
 from bs4 import BeautifulSoup
 
 logger = logging.getLogger()
@@ -28,17 +30,49 @@ def get_parcel():
         logger.error("Error getting parcel: " + str(e))
         raise e
 
+def send_email(rows):
+    ses = boto3.client('ses', region_name='ap-south-1')
+    SENDER = "awsforhassan@gmail.com"
+    RECIPIENT = "awsforhassan@gmail.com"
+    SUBJECT = f"Parcel Status :-> {len(rows)} Updates"
+    BODY_TEXT = ("Parcel Status\n\n" + "\n".join([f"{row['date']} - {row['details']} - {row['location']} - {row['status']}" for row in rows]))
+    CHARSET = "UTF-8"
+
+    try:
+        # Pronvide the contents of the email.
+        response = ses.send_raw_email(
+            Source=SENDER,
+            Destinations=[
+                RECIPIENT
+            ],
+            RawMessage={
+                'Data': 'From: ' + SENDER + '\n' +
+                        'To: ' + RECIPIENT + '\n' +
+                        'Subject: ' + SUBJECT + '\n' +
+                        'MIME-Version: 1.0\n' +
+                        'Content-type: text/plain; charset=UTF-8\n' +
+                        '\n' +
+                        BODY_TEXT
+            }
+        )
+        logger.info("Email sent: " + str(response))
+    except Exception as e:
+        logger.error("Error sending email: " + str(e))
+        raise e
+
+
 
 def lambda_handler(event, context):
     try: 
         logger.info("Received event: " + str(event))
         parcel = get_parcel()
         logger.info("Parcel: " + str(parcel))
+        send_email(parcel)
     except Exception as e:
         logger.error("Error getting parcel: " + str(e))
         raise e
 
 
-# if __name__ == '__main__':
-#     logging.basicConfig()
-#     lambda_handler(None, None)
+if __name__ == '__main__':
+    logging.basicConfig()
+    lambda_handler(None, None)
